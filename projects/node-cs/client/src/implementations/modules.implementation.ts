@@ -1,6 +1,11 @@
+import { _global_ } from '../namespaces/global.namespace';
+import { _fs_ } from '../namespaces/fs.namespace';
+import { _path_ } from '../namespaces/path.namespace';
+
 export interface ModulesImplementation {
   'fs': {
-    readdir: (path: _fs_.PathLike, options: { encoding: _global_.BufferEncoding | null; withFileTypes?: false | undefined } | _global_.BufferEncoding | undefined | null) => Promise<[NodeJS.ErrnoException | null, string[]]>
+    lstat: (path: _fs_.PathLike, options: _fs_.StatOptions | undefined) => Promise<[_global_.NodeJS.ErrnoException, Transformer<_fs_.Stats | _fs_.BigIntStats>]>,
+    readdir: (path: _fs_.PathLike, options: { encoding: _global_.BufferEncoding | null; } | _global_.BufferEncoding | undefined | null) => Promise<[_global_.NodeJS.ErrnoException, string[]]>
   },
   'path': {
     delimiter: (p: string) => Promise<string>,
@@ -21,49 +26,4 @@ export interface ModulesImplementation {
   }
 }
 
-declare namespace _global_ {
-  export type BufferEncoding = 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'ucs2' | 'ucs-2' | 'base64' | 'latin1' | 'binary' | 'hex';
-}
-
-declare namespace _fs_ {
-  export type PathLike = string | URL;
-  export interface ObjectEncodingOptions { encoding?: null | undefined; }
-}
-
-declare namespace _path_ {
-  export interface ParsedPath {
-    root: string;
-    dir: string;
-    base: string;
-    ext: string;
-    name: string;
-  }
-  export interface FormatInputPathObject {
-    root?: string | undefined;
-    dir?: string | undefined;
-    base?: string | undefined;
-    ext?: string | undefined;
-    name?: string | undefined;
-  }
-  // export interface PlatformPath {
-  //   normalize(p: string): string;
-  //   join(...paths: string[]): string;
-  //   resolve(...pathSegments: string[]): string;
-  //   isAbsolute(p: string): boolean;
-  //   relative(from: string, to: string): string;
-  //   dirname(p: string): string;
-  //   basename(p: string, ext?: string): string;
-  //   extname(p: string): string;
-  //   readonly sep: string;
-  //   readonly delimiter: string;
-  //   parse(p: string): ParsedPath;
-  //   format(pP: FormatInputPathObject): string;
-  //   toNamespacedPath(path: string): string;
-  //   readonly posix: PlatformPath;
-  //   readonly win32: PlatformPath;
-  // }
-}
-
-declare namespace NodeJS {
-  export interface ErrnoException extends Error { errno?: number | undefined; code?: string | undefined; path?: string | undefined; syscall?: string | undefined; stack?: string | undefined; }
-}
+type Transformer<T, K extends keyof T = never> = { [KT in Exclude<keyof T, K>]: T[KT] extends () => Promise<infer I> | infer I ? [I, any] : never };
