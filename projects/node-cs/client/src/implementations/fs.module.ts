@@ -5,6 +5,7 @@ export interface FSModule {
     readdir(path: string, options?: { encoding?: BufferEncoding; withFileTypes?: false; } | BufferEncoding): Promise<string[]>;
     readdir(path: string, options: { encoding?: BufferEncoding; withFileTypes: true; } | BufferEncoding): Promise<Dirent[]>;
     readdir(path: string, options?: { encoding?: BufferEncoding; withFileTypes?: boolean; } | BufferEncoding): Promise<string[] | Dirent[]>;
+    readFile(path: string, options: { encoding: BufferEncoding; flag?: string; } | string): Promise<string>;
 }
 
 export type BufferEncoding = 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'ucs2' | 'ucs-2' | 'base64' | 'base64url' | 'latin1' | 'binary' | 'hex';
