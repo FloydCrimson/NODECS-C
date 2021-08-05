@@ -3,6 +3,7 @@ export interface FSModule {
     lstat(path: string, options?: { bigint?: false; throwIfNoEntry?: boolean; }): Promise<Stats>;
     lstat(path: string, options: { bigint: true; throwIfNoEntry?: boolean; }): Promise<BigIntStats>;
     lstat(path: string, options?: { bigint?: boolean; throwIfNoEntry?: boolean; }): Promise<Stats | BigIntStats>;
+    mkdir(path: string, options?: MakeDirectoryOptions): Promise<string>;
     readdir(path: string, options?: { encoding?: BufferEncoding; withFileTypes?: false; } | BufferEncoding): Promise<string[]>;
     readdir(path: string, options: { encoding?: BufferEncoding; withFileTypes: true; } | BufferEncoding): Promise<Dirent[]>;
     readdir(path: string, options?: { encoding?: BufferEncoding; withFileTypes?: boolean; } | BufferEncoding): Promise<string[] | Dirent[]>;
@@ -17,6 +18,11 @@ export type AccessConstants = 'UV_FS_SYMLINK_DIR' | 'UV_FS_SYMLINK_JUNCTION' | '
 export type Mode = number | string;
 
 export type WriteFileOptions = (ObjectEncodingOptions & { mode?: Mode | undefined; flag?: string | undefined; }) | string | null;
+
+export interface MakeDirectoryOptions {
+    recursive?: boolean | undefined;
+    mode?: Mode | undefined;
+}
 
 export interface ObjectEncodingOptions {
     encoding?: BufferEncoding | null | undefined;
